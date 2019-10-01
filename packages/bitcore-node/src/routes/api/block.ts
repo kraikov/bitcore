@@ -58,11 +58,17 @@ router.get('/:blockId', async function(req: Request, res: Response) {
 
 //return mapping of {txid: {inputs, ouputs}} paginated at 20 per page, to limit reqs and overload
 router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res: Response) {
-  let { chain, network, blockHash, limit, pgnum } = req.params;
-   
+  let limitString: string = req.params.limit;
+  let pgnumString: string = req.params.pgnum;
+
+  let pgnum;
+  let limit;
+
+  let { chain, network, blockHash } = req.params;
+
   try {
-    pgnum = parseInt(pgnum, 10);
-    limit = parseInt(limit, 10);
+    pgnum = parseInt(limitString, 10);
+    limit = parseInt(pgnumString, 10);
     if(!(typeof pgnum === "number" && typeof limit === "number")) {
       res.status(400).send("Please enter limit and number as valid decimal numbers")
     } 
