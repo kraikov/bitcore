@@ -61,14 +61,15 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
   let limitString: string = req.params.limit;
   let pgnumString: string = req.params.pgnum;
 
-  let pgnum;
   let limit;
+  let pgnum;
 
   let { chain, network, blockHash } = req.params;
 
   try {
-    pgnum = parseInt(limitString, 10);
-    limit = parseInt(pgnumString, 10);
+    limit = parseInt(limitString, 10);
+    pgnum = parseInt(pgnumString, 10);
+
     if(!(typeof pgnum === "number" && typeof limit === "number")) {
       res.status(400).send("Please enter limit and number as valid decimal numbers")
     } 
