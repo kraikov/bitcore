@@ -98,27 +98,7 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
 
     const txidIndexes : any= {};
     let txids = txs.map((tx, index) => { txidIndexes[index] = tx.txid; return tx.txid });
-    let inputTxidIndexes : any = {};
     let outputTxidIndexes: any = {};
-
-    let inputsPromises = txids.map((txid,index) => {
-      try {
-        inputTxidIndexes[txid] = index;
-        return CoinStorage.collection
-          .find({
-            chain,
-            network,
-            spentTxid: {$in: txids}
-          })
-          .addCursorFlag('noCursorTimeout', true)
-          .toArray();
-      }  catch(err) {
-        console.log("Error reading inputs", err)
-         return err;
-      }
-    });
-
-    let inputsResults = await Promise.all(inputsPromises).then(inputs => { return inputs; } );
 
     let outputsPromises = txids.map((txid, index) => {
       try {
@@ -143,10 +123,11 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
     let txsResults : any = {};
   
     txids.forEach((txid) => {
-      let inputs = inputsResults[inputTxidIndexes[txid]];
-      let outputs = outputsResults[outputTxidIndexes[txid]];
+      let outputs : any = outputsResults[outputTxidIndexes[txid]];
 
-      txsResults[txid] = { inputs, outputs }
+      txsResults[txid] = outputs.map(tx => { 
+        return { address: tx.address, script: tx.script, value: tx.value } 
+      });
     });
 
     let prevPageNum;
