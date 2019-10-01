@@ -101,7 +101,7 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
           .find({
             chain,
             network,
-            spentTxid: txid
+            spentTxid: {$in: txids}
           })
           .addCursorFlag('noCursorTimeout', true)
           .toArray();
@@ -120,7 +120,7 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
           .find({
             chain,
             network,
-            mintTxid: txid
+            mintTxid: {$in: txids}
           })
           .addCursorFlag('noCursorTimeout', true)
           .toArray();
