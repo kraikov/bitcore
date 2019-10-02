@@ -125,9 +125,7 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
     txids.forEach((txid) => {
       let outputs : any = outputsResults[outputTxidIndexes[txid]];
 
-      txsResults[txid] = outputs.map(tx => { 
-        return { address: tx.address, script: tx.script, value: tx.value } 
-      });
+      txsResults[txid] = { outputs }
     });
 
     let prevPageNum;
