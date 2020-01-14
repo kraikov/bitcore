@@ -107,7 +107,7 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
           .find({
             chain,
             network,
-            mintTxid: {$in: txids}
+            mintTxid: txid
           })
           .addCursorFlag('noCursorTimeout', true)
           .toArray();
@@ -125,7 +125,7 @@ router.get('/:blockHash/coins/:limit/:pgnum', async function (req: Request, res:
     txids.forEach((txid) => {
       let outputs : any = outputsResults[outputTxidIndexes[txid]];
 
-      txsResults[txid] = { outputs }
+      txsResults[txid] = { outputs: outputs.map(output => CoinStorage._apiTransform(output, { object: true }))};
     });
 
     let prevPageNum;

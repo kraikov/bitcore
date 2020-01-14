@@ -30,7 +30,7 @@ export class RateLimitModel extends BaseModel<IRateLimit> {
 
   onConnect() {
     this.collection.createIndex({ identifier: 1, time: 1, method: 1, count: 1 }, { background: true });
-    this.collection.createIndex({ expireAt: 1 }, { expireAfterSeconds: 0, background: true });
+    this.collection.createIndex({ expireAt: 1 }, { expireAfterSeconds: 1, background: true });
   }
 
   incrementAndCheck(identifier: string, method: string) {
